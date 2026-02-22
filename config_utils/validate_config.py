@@ -9,5 +9,5 @@ def validate_config(config_data: Dict[str, str]) -> bool:
 
     # 知らないkeyがある・keyが足りない
     # WIDTHとかが負
-    # ENTRY, OUTPUT_FILEが外にある
+    # ENTRY, EXITが外にある
     pass
