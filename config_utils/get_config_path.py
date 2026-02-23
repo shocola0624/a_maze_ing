@@ -14,3 +14,7 @@ def get_config_path() -> Optional[str]:
         print("Error: Invalid number of argument.", file=sys.stderr)
         return None
     return sys.argv[1]
+
+if __name__ == "__main__":
+    result = get_config_path()
+    print(f"Test Output: {result}")
