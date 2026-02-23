@@ -4,9 +4,13 @@ import sys
 
 def get_config_path() -> Optional[str]:
     """
-    [TODO] docs
+    Get configuration file path from command line arguments.
+
+    Returns:
+        str: The file path if exactly one argument is given.
+        None: If the number arguments is invalid.
     """
-    # [TODO]
-    # sys module をつかってコマンドライン引数からconfigのパスを取得
-    # 引数の数が合わない場合にエラーメッセージを出してNoneをリターン
-    pass
+    if len(sys.argv) != 2:
+        print("Error: Invalid number of argument.", file=sys.stderr)
+        return None
+    return sys.argv[1]
