@@ -5,7 +5,7 @@ def main() -> None:
     docs
     """
     try:
-        from maze_utils import generate_maze, output_maze
+        from maze_utils import generate_maze, convert_maze, output_maze
         from config_utils import get_config_path, read_config, validate_config
         import config_utils.keys as CK
     except ImportError as e:
@@ -29,7 +29,8 @@ def main() -> None:
 
     # generate maze
     # receive maze: List[List[int]]
-    maze = generate_maze(config_data)
+    expanded_maze = generate_expanded_maze(config_data)
+    converted_maze = convert_maze(expanded_maze)
 
     # write the maze into output file
     output_path = config_data.get(CK.OUTPUT_FILE)
