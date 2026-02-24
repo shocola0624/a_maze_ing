@@ -1,8 +1,10 @@
-from .generate_maze import generate_maze
+from .generate_maze import generate_expanded_maze
+from .convert_maze import convert_maze
 from .output_maze import output_maze
 
 
 __all__ = [
-    generate_maze,
+    generate_expanded_maze,
+    convert_maze,
     output_maze
 ]
