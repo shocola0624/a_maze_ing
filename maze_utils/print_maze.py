@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 from config_utils import keys as CK
 
 
@@ -6,7 +6,8 @@ RESET   = "\x1b[0m"
 BLACK   = "\x1b[40m"
 RED     = "\x1b[41m"
 MAGENTA = "\x1b[45m"
-WHITE   = "\x1b[47m"
+GRAY   = "\x1b[47m"
+WHITE   = "\x1b[107m"
 
 
 def clear_screen() -> None:
@@ -16,7 +17,7 @@ def clear_screen() -> None:
     print("\x1b[2J\x1b[H", end="")
 
 
-def overwrite_maze(expanded_maze: List[List[int]], coord: tuple, n: int) -> None:
+def overwrite_maze(expanded_maze: List[List[int]], coord: Tuple[int], n: int) -> None:
     """
     [TODO]
     """
@@ -35,15 +36,16 @@ def print_maze(
     """
     entry = config_data[CK.ENTRY]
     exit = config_data[CK.EXIT]
-    overwrite_maze(expanded_maze, entry, 2)
-    overwrite_maze(expanded_maze, exit, 3)
+    overwrite_maze(expanded_maze, entry, 3)
+    overwrite_maze(expanded_maze, exit, 4)
 
     # black floor, white wall, magenta entry, red exit
     colors = {
         0: BLACK,
         1: WHITE,
-        2: MAGENTA,
-        3: RED
+        2: GRAY,
+        3: MAGENTA,
+        4: RED
     }
     str_maze = ""
 
@@ -60,13 +62,13 @@ def print_maze(
 
 if __name__ == "__main__":
     from maze_utils import generate_expanded_maze
-    import config_utils.keys as CK
     config_data = {
-        CK.WIDTH: 8,
-        CK.HEIGHT: 8,
+        CK.WIDTH: 30,
+        CK.HEIGHT: 30,
         CK.ENTRY: (0, 0),
-        CK.EXIT: (7, 7),
-        CK.PERFECT: True
+        CK.EXIT: (29, 29),
+        CK.PERFECT: True,
+        CK.SEED: 7984
     }
     expanded_maze = generate_expanded_maze(config_data)
     print_maze(expanded_maze, config_data)

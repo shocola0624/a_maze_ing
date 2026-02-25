@@ -5,7 +5,8 @@ def main() -> None:
     docs
     """
     try:
-        from maze_utils import generate_maze, convert_maze, output_maze
+        from maze_utils import (generate_expanded_maze, convert_maze,
+                                output_maze, print_maze)
         from config_utils import get_config_path, read_config, validate_config
         import config_utils.keys as CK
     except ImportError as e:
@@ -34,8 +35,8 @@ def main() -> None:
 
     # write the maze into output file
     output_path = config_data.get(CK.OUTPUT_FILE)
-    output_maze(maze, output_path)
-    # 描画方法がわからないからどこで処理するか不明
+    output_maze(converted_maze, output_path)
+    print_maze(expanded_maze, config_data)
 
 
 if __name__ == "__main__":
