@@ -45,3 +45,12 @@ def validate_config(config_data: Dict[str, str]) -> Optional[str]:
     config_data[CK.WIDTH] = width_val
     config_data[CK.HEIGHT] = height_val
 
+    def parse_coodinate(coord_str: str, key_name: str) -> tuple[int, int]:
+        parts = coord_str.split(",")
+        if len(parts) != 2:
+            return None
+        try:
+            return int(parts[0].strip()), int(parts[1].strip())
+        except ValueError:
+            return None
+
