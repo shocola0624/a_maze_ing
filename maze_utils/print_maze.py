@@ -2,12 +2,12 @@ from typing import Any, Dict, List, Tuple
 from config_utils import keys as CK
 
 
-RESET   = "\x1b[0m"
-BLACK   = "\x1b[40m"
-RED     = "\x1b[41m"
+RESET = "\x1b[0m"
+BLACK = "\x1b[40m"
+RED = "\x1b[41m"
 MAGENTA = "\x1b[45m"
-GRAY   = "\x1b[47m"
-WHITE   = "\x1b[107m"
+GRAY = "\x1b[47m"
+WHITE = "\x1b[107m"
 
 
 def clear_screen() -> None:
@@ -17,7 +17,9 @@ def clear_screen() -> None:
     print("\x1b[2J\x1b[H", end="")
 
 
-def overwrite_maze(expanded_maze: List[List[int]], coord: Tuple[int], n: int) -> None:
+def overwrite_maze(
+    expanded_maze: List[List[int]], coord: Tuple[int], n: int
+) -> None:
     """
     [TODO]
     """
@@ -68,7 +70,7 @@ if __name__ == "__main__":
         CK.ENTRY: (0, 0),
         CK.EXIT: (29, 29),
         CK.PERFECT: True,
-        CK.SEED: 7984
+        CK.WAIT_SEC: 0.01
     }
     expanded_maze = generate_expanded_maze(config_data)
     print_maze(expanded_maze, config_data)
