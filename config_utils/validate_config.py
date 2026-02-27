@@ -26,11 +26,17 @@ def validate_config(config_data: Optional[Dict[str, str]]) -> Optional[str]:
 
     for required_key in required_keys:
         if required_key not in config_data:
-            return f"Error: Missing required key '{required_key.value}' in configuration."
+            return (
+                f"Error: Missing required key '{required_key.value}' "
+                "in configuration."
+            )
 
     for actual_key in config_data.keys():
         if isinstance(actual_key, str):
-            return f"Error: Unknown key '{actual_key}' found in config_file."
+            return (
+                f"Error: Unknown key '{actual_key}' "
+                "found in config_file."
+            )
 
     try:
         width_val = int(config_data[CK.WIDTH])
@@ -83,7 +89,7 @@ def validate_config(config_data: Optional[Dict[str, str]]) -> Optional[str]:
 
 
 if __name__ == "__main__":
-    print("=== test1: good_data ===")
+    print("=== test1: valid_data ===")
     valid_data = {
         "WIDTH": "10",
         "HEIGHT": "10",
@@ -92,20 +98,20 @@ if __name__ == "__main__":
         "PERFECT": "True",
         "OUTPUT_FILE": "maze.txt"
     }
-    err1 = validate_config(valid_data)
+    err1 = validate_config(valid_data.copy())
     print(f"Return error: {err1}")
-    print(f"Data after conversion: {valid_data}")
+    print(f"Data after conversion: {valid_data}\n")
 
-    print("=== test2: Missing keys ===")
+    print("=== test2: missing_keys ===")
     missing_data = {
         "WIDTH": "10",
         "HEIGHT": "10"
     }
     err2 = validate_config(missing_data)
-    print(f"Return error {err2}")
+    print(f"Return error: {err2}\n")
 
     print("=== test3: extra_data ===")
-    valid_data = {
+    extra_data = {
         "WIDTH": "10",
         "HEIGHT": "10",
         "ENTRY": "0,0",
@@ -114,17 +120,69 @@ if __name__ == "__main__":
         "OUTPUT_FILE": "maze.txt",
         "Extra_info": "Brue"
     }
-    err3 = validate_config(valid_data)
-    print(f"Return error: {err3}")
+    err3 = validate_config(extra_data)
+    print(f"Return error: {err3}\n")
 
-    print("=== test4: excess_data ===")
+    print("=== test4: out_of_bounds ===")
     out_of_bounds_data = {
         "WIDTH": "5",
         "HEIGHT": "5",
-        "ENTRY": "10,10",
+        "ENTRY": "10,10",  # Out of bounds
         "EXIT": "1,1",
         "PERFECT": "False",
         "OUTPUT_FILE": "maze.txt"
     }
     err4 = validate_config(out_of_bounds_data)
-    print(f"Return error: {err4}")
+    print(f"Return error: {err4}\n")
+
+    print("=== test5: invalid_size ===")
+    invalid_size_data = {
+        "WIDTH": "-5",     # Negative value
+        "HEIGHT": "abc",   # Not an integer
+        "ENTRY": "0,0",
+        "EXIT": "1,1",
+        "PERFECT": "True",
+        "OUTPUT_FILE": "maze.txt"
+    }
+    err5 = validate_config(invalid_size_data)
+    print(f"Return error: {err5}\n")
+
+    print("=== test6: invalid_coord_format ===")
+    invalid_coord_data = {
+        "WIDTH": "10",
+        "HEIGHT": "10",
+        "ENTRY": "0-0",    # No comma
+        "EXIT": "a,b",     # Not integers
+        "PERFECT": "True",
+        "OUTPUT_FILE": "maze.txt"
+    }
+    err6 = validate_config(invalid_coord_data)
+    print(f"Return error: {err6}\n")
+
+    print("=== test7: same_entry_exit ===")
+    same_pos_data = {
+        "WIDTH": "10",
+        "HEIGHT": "10",
+        "ENTRY": "5,5",
+        "EXIT": "5,5",     # Same position
+        "PERFECT": "True",
+        "OUTPUT_FILE": "maze.txt"
+    }
+    err7 = validate_config(same_pos_data)
+    print(f"Return error: {err7}\n")
+
+    print("=== test8: invalid_perfect ===")
+    invalid_perfect_data = {
+        "WIDTH": "10",
+        "HEIGHT": "10",
+        "ENTRY": "0,0",
+        "EXIT": "9,9",
+        "PERFECT": "Yes",  # Not True/False
+        "OUTPUT_FILE": "maze.txt"
+    }
+    err8 = validate_config(invalid_perfect_data)
+    print(f"Return error: {err8}\n")
+
+    print("=== test9: none_input ===")
+    err9 = validate_config(None)
+    print(f"Return error: {err9}\n")
