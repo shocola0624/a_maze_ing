@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
-def main() -> None:
+def main(config_path: str| None = None) -> None:
     """
     docs
     """
     try:
-        from maze_utils import generate_maze, output_maze
+        from maze_utils import (generate_expanded_maze, convert_maze,
+                                output_maze, print_maze, ask_next_process)
         from config_utils import get_config_path, read_config, validate_config
         import config_utils.keys as CK
     except ImportError as e:
@@ -15,7 +16,8 @@ def main() -> None:
     # 以下実装の流れメモ
 
     # read command-line with sys module
-    config_path = get_config_path()
+    if config_path is None:
+        config_path = get_config_path()
 
     # open config.txt file
     # process keys + error handling
@@ -29,12 +31,14 @@ def main() -> None:
 
     # generate maze
     # receive maze: List[List[int]]
-    maze = generate_maze(config_data)
+    expanded_maze = generate_expanded_maze(config_data)
+    converted_maze = convert_maze(expanded_maze)
 
     # write the maze into output file
     output_path = config_data.get(CK.OUTPUT_FILE)
-    output_maze(maze, output_path)
-    # 描画方法がわからないからどこで処理するか不明
+    output_maze(converted_maze, output_path)
+    print_maze(expanded_maze, config_data)
+    ask_next_process(expanded_maze, config_data, config_path)
 
 
 if __name__ == "__main__":
