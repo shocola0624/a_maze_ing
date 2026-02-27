@@ -6,26 +6,29 @@ N, E, S, W = 1, 2, 4, 8
 
 
 def func(
-        converted_maze: List[List[int]],    expanded_maze: List[List[int]],
-        exp_x: int,                         exp_y: int
+        converted_maze: List[List[int]],
+        expanded_maze: List[List[int]],
+        exp_x: int,
+        exp_y: int
 ) -> None:
     """
     [TODO] 関数名も変えること。
     """
     con_x = exp_x // 2
     con_y = exp_y // 2
-    if expanded_maze[exp_y-1][exp_x]:
+    if expanded_maze[exp_y-1][exp_x] == 1:
         converted_maze[con_y][con_x] += N
-    if expanded_maze[exp_y][exp_x+1]:
+    if expanded_maze[exp_y][exp_x+1] == 1:
         converted_maze[con_y][con_x] += E
-    if expanded_maze[exp_y+1][exp_x]:
+    if expanded_maze[exp_y+1][exp_x] == 1:
         converted_maze[con_y][con_x] += S
-    if expanded_maze[exp_y][exp_x-1]:
+    if expanded_maze[exp_y][exp_x-1] == 1:
         converted_maze[con_y][con_x] += W
 
 
 def convert_maze(
-        expanded_maze: List[List[int]], config_data: Dict[str, Any]
+        expanded_maze: List[List[int]],
+        config_data: Dict[str, Any]
 ) -> List[List[int]]:
     """
     [TODO]
