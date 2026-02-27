@@ -1,28 +1,49 @@
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, Iterator
 from config_utils import keys as CK
 from random import seed, randint, choice
 from time import sleep
 from .print_maze import print_maze
 
 
-def build_wall_around(
-    expanded_maze: List[List[int]], x: int, y: int
+def overwrite_maze(
+    expanded_maze: List[List[int]], coord: Tuple[int], n: int
 ) -> None:
     """
     [TODO]
     """
-    for i in [-1, 0, 1]:
-        for j in [-1, 0, 1]:
-            if i != 0 or j != 0:
-                expanded_maze[y+i][x+j] = 1
+    try:
+        x, y = coord
+        expanded_maze[y][x] = n
+    except (TypeError, IndexError):
+        pass
 
 
 def initialize_maze(
-    expanded_maze: List[List[int]], exp_wd: int, exp_h: int
+    expanded_maze: List[List[int]],
+    config_data: Dict[str, Any],
+    exp_wd: int,
+    exp_h: int
 ) -> None:
     """
     [TODO]
     """
+    def build_wall_around(
+        expanded_maze: List[List[int]], x: int, y: int
+    ) -> None:
+        """
+        [TODO]
+        """
+        for i in [-1, 0, 1]:
+            for j in [-1, 0, 1]:
+                if i != 0 or j != 0:
+                    expanded_maze[y+i][x+j] = 3
+
+    # entry and exit
+    start = (i * 2 + 1 for i in config_data[CK.ENTRY])
+    goal = (i * 2 + 1 for i in config_data[CK.EXIT])
+    overwrite_maze(expanded_maze, start, 4)
+    overwrite_maze(expanded_maze, goal, 5)
+
     # wall
     for w in range(exp_wd):
         for h in range(exp_h):
@@ -155,8 +176,9 @@ def grow_wall_from(
         dir = choice(extendable_dirs)
         new_coord = lay_wall_toward(expanded_maze, coord, dir)
         wait_sec = config_data[CK.WAIT_SEC]
-        sleep(wait_sec)
-        print_maze(expanded_maze, config_data)
+        if wait_sec > 0:
+            sleep(wait_sec)
+            print_maze(expanded_maze, config_data)
         if new_coord:
             grow_wall_from(
                 expanded_maze, config_data, new_coord, taken_coords, mode
@@ -164,16 +186,16 @@ def grow_wall_from(
 
 
 def set_walls(
-        expanded_maze: List[List[int]], config_data: Dict[str, Any],
-        exp_wd: int, exp_h: int
+        expanded_maze: List[List[int]],
+        config_data: Dict[str, Any],
+        exp_wd: int,
+        exp_h: int
 ) -> None:
     """
     [TODO]壁の種をランダムな場所に植え付ける。別の関数で壁を成長させる。
     """
-    lattice_points = []
-    is_perfect = config_data[CK.PERFECT]
-
     # extend walls on 42 pattern
+    is_perfect = config_data[CK.PERFECT]
     if is_perfect:
         if exp_wd >= 15 and exp_h >= 11:
             width = config_data[CK.WIDTH]
@@ -199,6 +221,7 @@ def set_walls(
                 on_2.copy(), "to_wall"
             )
 
+    lattice_points = []
     for x in range(exp_wd):
         for y in range(exp_h):
             if x % 2 == 0 and y % 2 == 0:
@@ -211,6 +234,45 @@ def set_walls(
         grow_wall_from(expanded_maze, config_data, coord)
 
 
+def find_shortest_path(
+        expanded_maze: List[List[int]],
+        config_data: Dict[str, Any]
+) -> None:
+    """[TODO]"""
+
+    def adjacent_coord(coord: Tuple[int, int]) -> Iterator[Tuple[int, int]]:
+        """[TODO]"""
+        x, y = coord
+        around = [(x, y - 1), (x + 1, y), (x, y + 1), (x - 1, y)]
+
+        for i_x, i_y in around:
+            try:
+                if expanded_maze[i_y][i_x] in (0, 5):
+                    yield (i_x, i_y)
+            except IndexError:
+                pass
+
+    start = tuple(i * 2 + 1 for i in config_data[CK.ENTRY])
+    goal = tuple(i * 2 + 1 for i in config_data[CK.EXIT])
+    prev: Dict[Tuple[int, int], Tuple[int, int] | None] = {start: None}
+    coords = [start]
+    while coords:
+        cur = coords.pop(0)
+        if cur == goal:
+            break
+        for adj in adjacent_coord(cur):
+            if adj not in prev:
+                prev[adj] = cur
+                coords.append(adj)
+
+    cur = prev.get(goal)
+    while cur:
+        x, y = cur
+        if expanded_maze[y][x] == 0:
+            overwrite_maze(expanded_maze, cur, 6)
+        cur = prev[cur]
+
+
 def generate_expanded_maze(config_data: Dict[str, Any]) -> List[List[int]]:
     """
     [TODO]
@@ -220,16 +282,19 @@ def generate_expanded_maze(config_data: Dict[str, Any]) -> List[List[int]]:
     exp_wd = width * 2 + 1
     exp_h = height * 2 + 1
     expanded_maze = [[0 for _ in range(exp_wd)] for _ in range(exp_h)]
-    initialize_maze(expanded_maze, exp_wd, exp_h)
+    initialize_maze(expanded_maze, config_data, exp_wd, exp_h)
 
     # set seed
     try:
         seed_value = config_data[CK.SEED]
     except KeyError:
-        seed_value = randint(0, 10000)
+        seed_value = randint(0, 2147483647)
+        config_data[CK.SEED] = seed_value
     seed(seed_value)
 
     set_walls(expanded_maze, config_data, exp_wd, exp_h)
+
+    find_shortest_path(expanded_maze, config_data)
 
     return expanded_maze
 
