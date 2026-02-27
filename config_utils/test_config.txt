@@ -1,0 +1,8 @@
+WIDTH=20
+HEIGHT=15
+# This have to ignore
+
+ENTRY=0,0
+EXIT=19,14
+PERFECT=True
+OUTPUT_FILE=maze.txt
