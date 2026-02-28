@@ -32,7 +32,7 @@ def main(config_path: str| None = None) -> None:
     # generate maze
     # receive maze: List[List[int]]
     expanded_maze = generate_expanded_maze(config_data)
-    converted_maze = convert_maze(expanded_maze)
+    converted_maze = convert_maze(expanded_maze, config_data)
 
     # write the maze into output file
     output_path = config_data.get(CK.OUTPUT_FILE)
