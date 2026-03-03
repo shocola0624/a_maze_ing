@@ -1,7 +1,8 @@
+import sys
 from typing import Dict, Optional
 
 
-def read_config(config_path: str | None) -> Optional[Dict[str, str]]:
+def read_config(config_path: str) -> Optional[Dict[str, str]]:
     """
     Reads and parses a configuration file into a dictionary.
     Ignores empty lines and lines starting with '#'.
@@ -15,8 +16,6 @@ def read_config(config_path: str | None) -> Optional[Dict[str, str]]:
             key-value pairs, or None if the file is not found
             or formatting is invalid.
     """
-    if config_path is None:
-        return None
     config_data: Dict[str, str] = dict()
     try:
         with open(config_path, "r") as f:
@@ -28,16 +27,17 @@ def read_config(config_path: str | None) -> Optional[Dict[str, str]]:
                 continue
             if "=" not in line:
                 print(f"Error: Line {line_num} is invalid. "
-                      f"Expected 'KEY=VALUE'.")
+                      "Expected 'KEY=VALUE'.", file=sys.stderr)
                 return None
             key, value = line.split("=")
             config_data[key.strip()] = value.strip()
     except FileNotFoundError:
-        print(f"Error: Configuration file not found at '{config_path}'.")
+        print(f"Error: Configuration file not found at '{config_path}'.",
+              file=sys.stderr)
         return None
     except ValueError:
         print(f'Error: The conbination in "{config_path}" '
-              "is not match format")
+              "is not match format", file=sys.stderr)
         return None
     return config_data
 

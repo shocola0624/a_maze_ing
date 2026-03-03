@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Dict, Tuple, Optional
 from config_utils.keys import keys as CK
 
 
@@ -6,9 +6,8 @@ def validate_config(config_data: Optional[Dict[str, str]]) -> Optional[str]:
     """
     [TODO]
     """
-    # 1
     if config_data is None:
-        return "Error: config_data is None."
+        exit()
 
     for enum_key in CK:
         if enum_key.value in config_data:
@@ -24,6 +23,7 @@ def validate_config(config_data: Optional[Dict[str, str]]) -> Optional[str]:
         CK.OUTPUT_FILE
     )
 
+    # required key
     for required_key in required_keys:
         if required_key not in config_data:
             return (
@@ -38,6 +38,7 @@ def validate_config(config_data: Optional[Dict[str, str]]) -> Optional[str]:
                 "found in config_file."
             )
 
+    # WIDTH, HEIGHT
     try:
         width_val = int(config_data[CK.WIDTH])
         height_val = int(config_data[CK.HEIGHT])
@@ -50,7 +51,9 @@ def validate_config(config_data: Optional[Dict[str, str]]) -> Optional[str]:
     config_data[CK.WIDTH] = width_val
     config_data[CK.HEIGHT] = height_val
 
-    def parse_coordinate(coord_str: str) -> Optional[tuple[int, int]]:
+    # ENTRY, EXIT
+    def parse_coordinate(coord_str: str) -> Optional[Tuple[int, int]]:
+        """[TODO]"""
         parts = coord_str.split(",")
         if len(parts) != 2:
             return None
@@ -75,9 +78,24 @@ def validate_config(config_data: Optional[Dict[str, str]]) -> Optional[str]:
     if entry_val == exit_val:
         return "Error: ENTRY and EXIT must be at different positions."
 
+    width, height = width_val, height_val
+    center = (width + (width % 2 == 0), height + (height % 2 == 0))
+    c_x, c_y = center
+    coord_on_42 = [
+        (-6, -4), (-6, -2), (-6, 0), (-4, 0), (-2, 0), (-2, 2), (-2, 4),
+        (2, -4), (4, -4), (6, -4), (6, -2), (6, 0), (4, 0), (2, 0), (2, 2),
+        (2, 4), (4, 4), (6, 4)
+    ]
+    en = tuple(i * 2 + 1 for i in entry_val)
+    ex = tuple(i * 2 + 1 for i in exit_val)
+    for x, y in coord_on_42:
+        if (en == (c_x+x, c_y+y) or ex == (c_x+x, c_y+y)):
+            return "Error: ENTRY and EXIT must not be on 42 pattern."
+
     config_data[CK.ENTRY] = entry_val
     config_data[CK.EXIT] = exit_val
 
+    # PERFECT
     perfect_str = str(config_data[CK.PERFECT]).strip().lower()
     if perfect_str == "true":
         config_data[CK.PERFECT] = True
@@ -85,7 +103,22 @@ def validate_config(config_data: Optional[Dict[str, str]]) -> Optional[str]:
         config_data[CK.PERFECT] = False
     else:
         return "Error: PERFECT must be either 'True' or 'False'."
-    return None
+
+    # SEED, WAIT_SEC
+    try:
+        seed_value = int(config_data[CK.SEED])
+        config_data[CK.SEED] = seed_value
+    except ValueError:
+        return "Error: SEED must be integer values."
+    except KeyError:
+        pass
+    try:
+        wait_sec = float(config_data[CK.WAIT_SEC])
+        config_data[CK.WAIT_SEC] = wait_sec
+    except ValueError:
+        return "Error: WAIT_SEC must be float values."
+    except KeyError:
+        config_data[CK.WAIT_SEC] = 0.0
 
 
 if __name__ == "__main__":

@@ -16,13 +16,13 @@ def func(
     """
     con_x = exp_x // 2
     con_y = exp_y // 2
-    if expanded_maze[exp_y-1][exp_x] == 1:
+    if 1 <= expanded_maze[exp_y-1][exp_x] <= 3:
         converted_maze[con_y][con_x] += N
-    if expanded_maze[exp_y][exp_x+1] == 1:
+    if 1 <= expanded_maze[exp_y][exp_x+1] <= 3:
         converted_maze[con_y][con_x] += E
-    if expanded_maze[exp_y+1][exp_x] == 1:
+    if 1 <= expanded_maze[exp_y+1][exp_x] <= 3:
         converted_maze[con_y][con_x] += S
-    if expanded_maze[exp_y][exp_x-1] == 1:
+    if 1 <= expanded_maze[exp_y][exp_x-1] <= 3:
         converted_maze[con_y][con_x] += W
 
 
