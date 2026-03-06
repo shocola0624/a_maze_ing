@@ -1,18 +1,23 @@
 from typing import Any, Dict, List
-from config_utils import keys as CK
+from config_utils import Keys as CK
 
 
 N, E, S, W = 1, 2, 4, 8
 
 
-def func(
+def encode_cell_walls(
         converted_maze: List[List[int]],
         expanded_maze: List[List[int]],
         exp_x: int,
         exp_y: int
 ) -> None:
-    """
-    [TODO] 関数名も変えること。
+    """Encode walls around one expanded-grid cell into the compact maze.
+
+    Args:
+        converted_maze: Compact maze grid to update in place.
+        expanded_maze: Expanded maze grid containing wall information.
+        exp_x: X coordinate of the target cell in the expanded maze.
+        exp_y: Y coordinate of the target cell in the expanded maze.
     """
     con_x = exp_x // 2
     con_y = exp_y // 2
@@ -30,8 +35,15 @@ def convert_maze(
         expanded_maze: List[List[int]],
         config_data: Dict[str, Any]
 ) -> List[List[int]]:
-    """
-    [TODO]
+    """Convert an expanded maze grid into a compact wall-bit maze grid.
+
+    Args:
+        expanded_maze: Expanded maze grid.
+        config_data: Config data obtained from the specific file.
+
+    Returns:
+        A 2D compact maze grid where each cell stores wall flags derived from
+        the expanded maze.
     """
     width = config_data[CK.WIDTH]
     height = config_data[CK.HEIGHT]
@@ -41,7 +53,7 @@ def convert_maze(
     for exp_x in range(exp_wd):
         for exp_y in range(exp_h):
             if exp_x % 2 and exp_y % 2:
-                func(converted_maze, expanded_maze, exp_x, exp_y)
+                encode_cell_walls(converted_maze, expanded_maze, exp_x, exp_y)
     return converted_maze
 
 

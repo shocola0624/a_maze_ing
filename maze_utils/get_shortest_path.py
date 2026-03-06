@@ -1,5 +1,5 @@
 from typing import Any, Dict, List, Optional
-from config_utils.keys import keys as CK
+from config_utils.keys import Keys as CK
 
 
 def get_shortest_path(

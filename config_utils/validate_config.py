@@ -1,10 +1,15 @@
 from typing import Dict, Tuple, Optional
-from config_utils.keys import keys as CK
+from config_utils.keys import Keys as CK
 
 
 def validate_config(config_data: Optional[Dict[str, str]]) -> Optional[str]:
-    """
-    [TODO]
+    """Validate and normalize maze configuration data in place.
+
+    Args:
+        config_data: Raw config mapping read from the config file.
+
+    Returns:
+        An error message string if validation fails, otherwise None.
     """
     if config_data is None:
         exit()
@@ -53,7 +58,14 @@ def validate_config(config_data: Optional[Dict[str, str]]) -> Optional[str]:
 
     # ENTRY, EXIT
     def parse_coordinate(coord_str: str) -> Optional[Tuple[int, int]]:
-        """[TODO]"""
+        """Parse an "x, y" coordinate string into a tuple of two integers.
+
+        Args:
+            coord_str: Coordinate string.
+
+        Returns:
+            A tuple `(x, y)` if parsing succeeds, otherwise None.
+        """
         parts = coord_str.split(",")
         if len(parts) != 2:
             return None
@@ -119,6 +131,8 @@ def validate_config(config_data: Optional[Dict[str, str]]) -> Optional[str]:
         return "Error: WAIT_SEC must be float values."
     except KeyError:
         config_data[CK.WAIT_SEC] = 0.0
+
+    return None
 
 
 if __name__ == "__main__":
