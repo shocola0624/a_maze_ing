@@ -1,5 +1,5 @@
 from typing import Any, Dict, List, Optional
-from config_utils import keys as CK
+from config_utils import Keys as CK
 
 
 def int_to_hex(num: int) -> str:

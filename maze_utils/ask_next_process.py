@@ -1,5 +1,5 @@
 from typing import Any, List, Dict
-from .generate_maze import print_maze
+from .generate_maze import MazeGenerator
 from a_maze_ing import main
 
 
@@ -34,6 +34,7 @@ def ask_next_process(
         scheme_index: Current index for cycling predefined color schemes.
         show_path: Whether to render the shortest path.
     """
+    print_maze = MazeGenerator.print_maze
     # 0 floor, 1 wall, 2 inside 42, 3 outside 42, 4 entry, 5 exit, 6 path
     color_schemes = [
         [BLACK, WHITE, GRAY, WHITE, MAGENTA, RED, CYAN],
@@ -72,7 +73,15 @@ def ask_next_process(
         )
     if choice == 4:
         def ask_color_scheme(component: str) -> str:
-            """[TODO]"""
+            """Prompt for a color name for one maze component.
+
+            Args:
+                component: Name of the maze component to color.
+
+            Returns:
+                The ANSI color string mapped from the user's input.
+                Re-prompts until a supported color is entered.
+            """
             input_color = input(f"Color you chose for the {component}: ")
             try:
                 return colors[input_color]

@@ -1,10 +1,8 @@
 from enum import Enum
 
 
-class keys(Enum):
-    """
-    [TODO]
-    """
+class Keys(Enum):
+    """Enum of supported keys in the maze configuration file."""
     WIDTH = "WIDTH"
     HEIGHT = "HEIGHT"
     ENTRY = "ENTRY"
