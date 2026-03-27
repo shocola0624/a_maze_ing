@@ -14,7 +14,30 @@ WHITE = "\x1b[107m"
 
 
 class MazeGenerator:
-    """[TODO]"""
+    """
+    Generate, solve, and render an expanded maze grid.
+
+    This class builds a maze on an "expanded" representation of the original
+    logical grid. If the logical maze size is `(width, height)`, the expanded
+    maze size becomes `(width * 2 + 1, height * 2 + 1)`, allowing walls and
+    passages to be represented explicitly as separate cells.
+
+    Main responsibilities:
+        - Initialize the expanded grid with outer borders, entry, and exit.
+        - Optionally place a central "42" pattern when the maze is large enough.
+        - Grow walls from lattice points to form the maze layout.
+        - Find and mark the shortest path from entry to exit.
+        - Render the maze in the terminal using ANSI colors.
+
+    Cell values used in the expanded maze:
+        0: floor / open path
+        1: wall
+        2: cell belonging to the inside of the "42" pattern
+        3: reserved area surrounding the "42" pattern
+        4: entry
+        5: exit
+        6: shortest path
+    """
 
     @staticmethod
     def print_maze(
@@ -340,13 +363,10 @@ class MazeGenerator:
                     (x+3, y+5), (x+1, y+5), (x+1, y+3), (x+1, y+1), (x+1, y-1),
                     (x+1, y-3)
                 ]
+                self.overwrite_maze(expanded_maze, (x, y+5), 1)
                 self.grow_wall_from(
                     expanded_maze, config_data, choice(on_4),
-                    on_4.copy() + on_2.copy(), "to_wall"# [TODO]
-                )
-                self.grow_wall_from(
-                    expanded_maze, config_data, choice(on_2),
-                    on_2.copy(), "to_wall"
+                    on_4.copy() + on_2.copy(), "to_wall"
                 )
 
         lattice_points = []
