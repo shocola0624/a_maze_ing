@@ -45,7 +45,6 @@ def get_shortest_path(
                 cur_x += x * 2
                 cur_y += y * 2
                 break
-        print(new_path)
         if new_path:
             path += new_path
         else:

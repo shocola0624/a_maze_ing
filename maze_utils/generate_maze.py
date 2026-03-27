@@ -1,3 +1,4 @@
+import sys
 from typing import Any, Dict, List, Tuple, Iterator
 from config_utils import Keys as CK
 from random import seed, randint, choice
@@ -164,7 +165,7 @@ class MazeGenerator:
                 build_wall_around(expanded_maze, c_x + x, c_y + y)
                 expanded_maze[c_y+y][c_x+x] = 2
         else:
-            print("Error: It's too small to draw 42")
+            print("Error: It's too small to draw 42", file=sys.stderr)
 
     def grow_wall_from(
             self,
