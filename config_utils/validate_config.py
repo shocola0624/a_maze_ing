@@ -91,18 +91,19 @@ def validate_config(config_data: Optional[Dict[str, str]]) -> Optional[str]:
         return "Error: ENTRY and EXIT must be at different positions."
 
     width, height = width_val, height_val
-    center = (width + (width % 2 == 0), height + (height % 2 == 0))
-    c_x, c_y = center
-    coord_on_42 = [
-        (-6, -4), (-6, -2), (-6, 0), (-4, 0), (-2, 0), (-2, 2), (-2, 4),
-        (2, -4), (4, -4), (6, -4), (6, -2), (6, 0), (4, 0), (2, 0), (2, 2),
-        (2, 4), (4, 4), (6, 4)
-    ]
-    en = tuple(i * 2 + 1 for i in entry_val)
-    ex = tuple(i * 2 + 1 for i in exit_val)
-    for x, y in coord_on_42:
-        if (en == (c_x+x, c_y+y) or ex == (c_x+x, c_y+y)):
-            return "Error: ENTRY and EXIT must not be on 42 pattern."
+    if width > 9 and height > 7:
+        center = (width + (width % 2 == 0), height + (height % 2 == 0))
+        c_x, c_y = center
+        coord_on_42 = [
+            (-6, -4), (-6, -2), (-6, 0), (-4, 0), (-2, 0), (-2, 2), (-2, 4),
+            (2, -4), (4, -4), (6, -4), (6, -2), (6, 0), (4, 0), (2, 0), (2, 2),
+            (2, 4), (4, 4), (6, 4)
+        ]
+        en = tuple(i * 2 + 1 for i in entry_val)
+        ex = tuple(i * 2 + 1 for i in exit_val)
+        for x, y in coord_on_42:
+            if (en == (c_x+x, c_y+y) or ex == (c_x+x, c_y+y)):
+                return "Error: ENTRY and EXIT must not be on 42 pattern."
 
     config_data[CK.ENTRY] = entry_val
     config_data[CK.EXIT] = exit_val

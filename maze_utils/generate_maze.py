@@ -151,7 +151,7 @@ class MazeGenerator:
                 expanded_maze[h][exp_wd-1] = 1
 
         # 42 pattern
-        if exp_wd >= 29 and exp_h >= 21:
+        if exp_wd >= 19 and exp_h >= 15:
             width = exp_wd // 2
             height = exp_h // 2
             center = (width + (width % 2 == 0), height + (height % 2 == 0))
@@ -349,7 +349,7 @@ class MazeGenerator:
         # extend walls on 42 pattern
         is_perfect = config_data[CK.PERFECT]
         if is_perfect:
-            if exp_wd >= 29 and exp_h >= 21:
+            if exp_wd >= 19 and exp_h >= 15:
                 width = config_data[CK.WIDTH]
                 height = config_data[CK.HEIGHT]
                 x, y = width + (width % 2 == 0), height + (height % 2 == 0)
