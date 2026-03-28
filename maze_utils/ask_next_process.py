@@ -1,6 +1,7 @@
-from typing import Any, List, Dict
+from typing import List
 from .generate_maze import MazeGenerator
 from a_maze_ing import main
+from config_utils.keys import ConfigData
 
 
 BLACK = "\x1b[40m"
@@ -16,10 +17,10 @@ WHITE = "\x1b[107m"
 
 def ask_next_process(
     expanded_maze: List[List[int]],
-    config_data: Dict[str, Any],
+    config_data: ConfigData,
     config_path: str,
-    scheme_index: int | None = 0,
-    show_path: bool | None = False
+    scheme_index: int = 0,
+    show_path: bool = False
 ) -> None:
     """
     Prompt for the next action and update the maze display/settings.
@@ -50,9 +51,8 @@ def ask_next_process(
     print("3: Rotate maze colors")
     print("4: Set color scheme")
     print("Other: Quit")
-    choice = input("Choice? (1-4): ").strip()
     try:
-        choice = int(choice)
+        choice = int(input("Choice? (1-4): ").strip())
     except ValueError:
         return
 

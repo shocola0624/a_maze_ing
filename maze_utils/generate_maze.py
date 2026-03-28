@@ -1,6 +1,6 @@
 import sys
-from typing import Any, Dict, List, Tuple, Iterator
-from config_utils import Keys as CK
+from typing import Dict, List, Tuple, Iterator, Optional
+from config_utils import Keys as CK, ConfigData
 from random import seed, randint, choice
 from time import sleep
 
@@ -43,7 +43,7 @@ class MazeGenerator:
     @staticmethod
     def print_maze(
             expanded_maze: List[List[int]],
-            config_data: Dict[str, Any],
+            config_data: ConfigData,
             color_scheme: List[str] | None = None,
             show_path: bool | None = False
     ) -> None:
@@ -90,11 +90,11 @@ class MazeGenerator:
                     str_maze += "  "
             str_maze += "\n"
         print(str_maze)
-        print("seed:", config_data[CK.SEED])
+        print("seed:", config_data[CK.SEED.name])
 
     @staticmethod
     def overwrite_maze(
-        expanded_maze: List[List[int]], coord: Tuple[int], n: int
+        expanded_maze: List[List[int]], coord: Tuple[int, int], n: int
     ) -> None:
         """
         Write a value into the expanded maze grid at (x, y).
@@ -113,7 +113,7 @@ class MazeGenerator:
     def initialize_maze(
         self,
         expanded_maze: List[List[int]],
-        config_data: Dict[str, Any],
+        config_data: ConfigData,
         exp_wd: int,
         exp_h: int
     ) -> None:
@@ -137,8 +137,10 @@ class MazeGenerator:
                         expanded_maze[y+i][x+j] = 3
 
         # entry and exit
-        start = (i * 2 + 1 for i in config_data[CK.ENTRY])
-        goal = (i * 2 + 1 for i in config_data[CK.EXIT])
+        x, y = config_data[CK.ENTRY.name]
+        start = x * 2 + 1, y * 2 + 1
+        x, y = config_data[CK.EXIT.name]
+        goal = x * 2 + 1, y * 2 + 1
         self.overwrite_maze(expanded_maze, start, 4)
         self.overwrite_maze(expanded_maze, goal, 5)
 
@@ -170,7 +172,7 @@ class MazeGenerator:
     def grow_wall_from(
             self,
             expanded_maze: List[List[int]],
-            config_data: Dict[str, Any],
+            config_data: ConfigData,
             coord: Tuple[int, int],
             taken_coords: List[Tuple[int, int]] | None = None,
             mode: str | None = None
@@ -189,7 +191,7 @@ class MazeGenerator:
             expanded_maze: List[List[int]],
             coord: Tuple[int, int],
             dir: str
-        ) -> Tuple[int, int]:
+        ) -> Optional[Tuple[int, int]]:
             """Lay a 2-cell wall segment from `coord` toward `dir`.
 
             Writes wall tiles (value 1) into the intermediate cell and the cell
@@ -316,7 +318,7 @@ class MazeGenerator:
         if extendable_dirs:
             dir = choice(extendable_dirs)
             new_coord = lay_wall_toward(expanded_maze, coord, dir)
-            wait_sec = config_data[CK.WAIT_SEC]
+            wait_sec = config_data[CK.WAIT_SEC.name]
             if wait_sec > 0:
                 sleep(wait_sec)
                 self.print_maze(expanded_maze, config_data)
@@ -328,7 +330,7 @@ class MazeGenerator:
     def set_walls(
             self,
             expanded_maze: List[List[int]],
-            config_data: Dict[str, Any],
+            config_data: ConfigData,
             exp_wd: int,
             exp_h: int
     ) -> None:
@@ -347,11 +349,11 @@ class MazeGenerator:
             exp_h: Height of the expanded maze grid.
         """
         # extend walls on 42 pattern
-        is_perfect = config_data[CK.PERFECT]
+        is_perfect = config_data[CK.PERFECT.name]
         if is_perfect:
             if exp_wd >= 19 and exp_h >= 15:
-                width = config_data[CK.WIDTH]
-                height = config_data[CK.HEIGHT]
+                width = config_data[CK.WIDTH.name]
+                height = config_data[CK.HEIGHT.name]
                 x, y = width + (width % 2 == 0), height + (height % 2 == 0)
                 on_4 = [
                     (x-7, y-5), (x-7, y-3), (x-7, y-1), (x-7, y+1), (x-5, y+1),
@@ -386,7 +388,7 @@ class MazeGenerator:
     def find_shortest_path(
             self,
             expanded_maze: List[List[int]],
-            config_data: Dict[str, Any]
+            config_data: ConfigData
     ) -> None:
         """Find the shortest path from entry to exit and mark it on the maze.
 
@@ -416,10 +418,13 @@ class MazeGenerator:
                 except IndexError:
                     pass
 
-        start = tuple(i * 2 + 1 for i in config_data[CK.ENTRY])
-        goal = tuple(i * 2 + 1 for i in config_data[CK.EXIT])
+        x, y = config_data[CK.ENTRY.name]
+        start = x * 2 + 1, y * 2 + 1
+        x, y = config_data[CK.EXIT.name]
+        goal = x * 2 + 1, y * 2 + 1
         prev: Dict[Tuple[int, int], Tuple[int, int] | None] = {start: None}
         coords = [start]
+        cur: Tuple[int, int] | None
         while coords:
             cur = coords.pop(0)
             if cur == goal:
@@ -438,7 +443,7 @@ class MazeGenerator:
 
     def generate_expanded_maze(
             self,
-            config_data: Dict[str, Any]
+            config_data: ConfigData
     ) -> List[List[int]]:
         """Generate an expanded maze grid from validated configuration data.
 
@@ -449,8 +454,8 @@ class MazeGenerator:
             A 2D expanded maze grid with walls initialized, generated, and the
             shortest path marked.
         """
-        width = config_data[CK.WIDTH]
-        height = config_data[CK.HEIGHT]
+        width = config_data[CK.WIDTH.name]
+        height = config_data[CK.HEIGHT.name]
         exp_wd = width * 2 + 1
         exp_h = height * 2 + 1
         expanded_maze = [[0 for _ in range(exp_wd)] for _ in range(exp_h)]
@@ -458,10 +463,10 @@ class MazeGenerator:
 
         # set seed
         try:
-            seed_value = config_data[CK.SEED]
+            seed_value = config_data[CK.SEED.name]
         except KeyError:
             seed_value = randint(0, 2147483647)
-            config_data[CK.SEED] = seed_value
+            config_data[CK.SEED.name] = seed_value
         seed(seed_value)
 
         self.set_walls(expanded_maze, config_data, exp_wd, exp_h)
@@ -469,17 +474,3 @@ class MazeGenerator:
         self.find_shortest_path(expanded_maze, config_data)
 
         return expanded_maze
-
-
-if __name__ == "__main__":
-    config_data = {
-        CK.WIDTH: 30,
-        CK.HEIGHT: 30,
-        CK.ENTRY: (0, 0),
-        CK.EXIT: (29, 29),
-        CK.PERFECT: True,
-        CK.WAIT_SEC: 0.0
-    }
-    g = MazeGenerator()
-    expanded_maze = g.generate_expanded_maze(config_data)
-    g.print_maze(expanded_maze, config_data)

@@ -1,10 +1,10 @@
-from typing import Any, Dict, List, Optional
-from config_utils.keys import Keys as CK
+from typing import List, Optional
+from config_utils import Keys as CK, ConfigData
 
 
 def get_shortest_path(
     expanded_maze: List[List[int]],
-    config_data: Dict[str, Any]
+    config_data: ConfigData
 ) -> Optional[str]:
     """
     Find a path from ENTRY to EXIT as a string of N/E/S/W moves.
@@ -16,10 +16,10 @@ def get_shortest_path(
     Returns:
         A direction string (e.g., "NNEESW"), or None if no path is found.
     """
-    start = config_data[CK.ENTRY]
-    start = tuple(i * 2 + 1 for i in start)
-    goal = config_data[CK.EXIT]
-    goal = tuple(i * 2 + 1 for i in goal)
+    x, y = config_data[CK.ENTRY.name]
+    start = x * 2 + 1, y * 2 + 1
+    x, y = config_data[CK.EXIT.name]
+    goal = x * 2 + 1, y * 2 + 1
     cur_x, cur_y = start
     path = ""
     adj = {

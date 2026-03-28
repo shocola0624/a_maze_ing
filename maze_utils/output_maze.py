@@ -1,5 +1,5 @@
-from typing import Any, Dict, List, Optional
-from config_utils import Keys as CK
+from typing import List, Optional
+from config_utils import Keys as CK, ConfigData
 
 
 def int_to_hex(num: int) -> str:
@@ -18,7 +18,7 @@ def int_to_hex(num: int) -> str:
 def output_maze(
     maze: List[List[int]],
     output_path: str,
-    config_data: Dict[str, Any],
+    config_data: ConfigData,
     shortest_path: Optional[str]
 ) -> None:
     """
@@ -29,8 +29,8 @@ def output_maze(
         output_path: The file path where the maze will be saved.
     """
     output_str = ""
-    start = config_data[CK.ENTRY]
-    goal = config_data[CK.EXIT]
+    start = config_data[CK.ENTRY.name]
+    goal = config_data[CK.EXIT.name]
     with open(output_path, "w") as f:
         for row in maze:
             line_str = ""
@@ -43,23 +43,3 @@ def output_maze(
         if shortest_path:
             output_str += shortest_path + "\n"
         f.write(output_str)
-
-
-if __name__ == "__main__":
-    print(f"10 -> {int_to_hex(10)}")
-    print(f"15 -> {int_to_hex(15)}")
-    test_maze = [
-        [15, 10, 5],
-        [0, 1, 2],
-        [9, 11, 14]
-    ]
-    test_file = "test_maze.txt"
-    output_maze(test_maze, test_file)
-    print(f"Successfully wrote to {test_file}.")
-    print("\n--- output_file ---")
-    try:
-        with open(test_file, 'r') as f:
-            content = f.read()
-            print(content)
-    except FileNotFoundError:
-        print("Error not found file")
