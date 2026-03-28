@@ -1,24 +1,26 @@
 PYTHON = python
-PDB = pdb
+PDB = pdb3
 PIP = pip
 VENV = venv
 ACTIVATE = $(VENV)/bin/activate
 
-run:
+run: $(VENV)
 	. $(ACTIVATE); $(PYTHON) a_maze_ing.py config.txt
 
-install:
+$(VENV):
 	python3 -m venv $(VENV)
 	. $(ACTIVATE); \
 	$(PIP) install --upgrade pip; \
 	$(PIP) install .; \
 	$(PIP) install flake8 mypy build
 
-build:
+install: $(VENV)
+
+build: $(VENV)
 	. $(ACTIVATE); \
 	$(PYTHON) -m build
 
-debug:
+debug: $(VENV)
 	. $(ACTIVATE); \
 	$(PDB) a_maze_ing.py config.txt
 
@@ -26,12 +28,12 @@ clean:
 	rm -rf __pycache__ .mypy_cache */__pycache__ build/ dist/ *.egg-info/ venv
 	find . \( -name "__pycache__" -o -name "build" -o -name "dist" -o -name "*.egg-info" -o -name "*.pyc" -o -name "maze.txt" \) -print -exec rm -rf {} \;
 
-lint:
+lint: $(VENV)
 	. $(ACTIVATE); \
 	$(PYTHON) -m flake8 .; \
 	$(PYTHON) -m mypy . --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
 
-lint-strict:
+lint-strict: $(VENV)
 	. $(ACTIVATE); \
 	$(PYTHON) -m flake8 .; \
 	$(PYTHON) -m mypy . --strict
