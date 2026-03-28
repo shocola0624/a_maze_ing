@@ -32,16 +32,15 @@ def read_config(config_path: str) -> Optional[Dict[str, str]]:
                 return None
             key, value = line.split("=")
             config_data[CK[key.strip()].name] = value.strip()
-    except FileNotFoundError:
-        print(f"Error: Configuration file not found at '{config_path}'.",
-              file=sys.stderr)
+    except OSError as e:
+        print(f"Error: {e}", file=sys.stderr)
         return None
     except ValueError:
         print(f'Error: The conbination in "{config_path}" '
               "is not match format", file=sys.stderr)
         return None
     except KeyError:
-        print("Error: Invalid key")
+        print("Error: Invalid key", file=sys.stderr)
         return None
     return config_data
 

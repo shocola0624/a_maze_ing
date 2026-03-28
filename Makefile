@@ -25,8 +25,8 @@ debug: $(VENV)
 	$(PDB) a_maze_ing.py config.txt
 
 clean:
-	rm -rf __pycache__ .mypy_cache */__pycache__ build/ dist/ *.egg-info/ venv
-	find . \( -name "__pycache__" -o -name "build" -o -name "dist" -o -name "*.egg-info" -o -name "*.pyc" -o -name "maze.txt" \) -print -exec rm -rf {} \;
+	-rm -rf venv
+	-find . \( -name "__pycache__" -o -name "build" -o -name "dist" -o -name "*.egg-info" -o -name "*.pyc" -o -name "maze.txt" \) -print -exec rm -rf {} \;
 
 lint: $(VENV)
 	. $(ACTIVATE); \

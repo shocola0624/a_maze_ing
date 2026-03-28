@@ -1,3 +1,4 @@
+import sys
 from typing import List, Optional
 from config_utils import Keys as CK, ConfigData
 
@@ -31,15 +32,18 @@ def output_maze(
     output_str = ""
     start = config_data[CK.ENTRY.name]
     goal = config_data[CK.EXIT.name]
-    with open(output_path, "w") as f:
-        for row in maze:
-            line_str = ""
-            for cell in row:
-                line_str += int_to_hex(cell)
-            output_str += line_str + "\n"
-        output_str += "\n"
-        output_str += str(start)[1:-1].replace(" ", "") + "\n"
-        output_str += str(goal)[1:-1].replace(" ", "") + "\n"
-        if shortest_path:
-            output_str += shortest_path + "\n"
-        f.write(output_str)
+    for row in maze:
+        line_str = ""
+        for cell in row:
+            line_str += int_to_hex(cell)
+        output_str += line_str + "\n"
+    output_str += "\n"
+    output_str += str(start)[1:-1].replace(" ", "") + "\n"
+    output_str += str(goal)[1:-1].replace(" ", "") + "\n"
+    if shortest_path:
+        output_str += shortest_path + "\n"
+    try:
+        with open(output_path, "w") as f:
+            f.write(output_str)
+    except OSError as e:
+        print(f"Error: {e}", file=sys.stderr)

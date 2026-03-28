@@ -33,6 +33,9 @@ def validate_config(config_data: Optional[dict[str, str]]) -> ConfigData:
                 "in configuration."
             )
 
+    if not config_data[CK.OUTPUT_FILE.name]:
+        raise ValueError("Error: Not specified output file")
+
     # WIDTH, HEIGHT
     try:
         width_val = int(config_data[CK.WIDTH.name])
