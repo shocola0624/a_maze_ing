@@ -16,3 +16,9 @@ dev = [
 	"mypy",
 	"billd",
 ]
+
+[tool.hatch.build.targets.wheel]
+packages = [
+    "maze_utils",
+    "config_utils"
+]

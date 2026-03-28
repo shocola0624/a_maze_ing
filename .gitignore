@@ -1,7 +1,22 @@
+# Editor / Temp files
 *.swp
 *.swo
+
+# Python Caches
 __pycache__/
 *.py[cod]
 *$py.class
+.mypy_cache/
+
+# Virtual Environments
+venv/
+env/
+
+# Build / Distribution / Packaging
+build/
+dist/
+*.egg-info/
+
+# Output / Config files
 *.txt
 !config.txt
