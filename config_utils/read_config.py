@@ -1,5 +1,6 @@
 import sys
-from typing import Dict, Optional
+from typing import Optional, Dict
+from config_utils.keys import Keys as CK
 
 
 def read_config(config_path: str) -> Optional[Dict[str, str]]:
@@ -16,7 +17,7 @@ def read_config(config_path: str) -> Optional[Dict[str, str]]:
             key-value pairs, or None if the file is not found
             or formatting is invalid.
     """
-    config_data: Dict[str, str] = dict()
+    config_data = dict()
     try:
         with open(config_path, "r") as f:
             raw_config_data = f.read()
@@ -30,7 +31,7 @@ def read_config(config_path: str) -> Optional[Dict[str, str]]:
                       "Expected 'KEY=VALUE'.", file=sys.stderr)
                 return None
             key, value = line.split("=")
-            config_data[key.strip()] = value.strip()
+            config_data[CK[key.strip()].name] = value.strip()
     except FileNotFoundError:
         print(f"Error: Configuration file not found at '{config_path}'.",
               file=sys.stderr)
@@ -38,6 +39,9 @@ def read_config(config_path: str) -> Optional[Dict[str, str]]:
     except ValueError:
         print(f'Error: The conbination in "{config_path}" '
               "is not match format", file=sys.stderr)
+        return None
+    except KeyError:
+        print("Error: Invalid key")
         return None
     return config_data
 

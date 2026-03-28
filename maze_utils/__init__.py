@@ -6,9 +6,9 @@ from .ask_next_process import ask_next_process
 
 
 __all__ = [
-    MazeGenerator,
-    convert_maze,
-    output_maze,
-    get_shortest_path,
-    ask_next_process
+    "MazeGenerator",
+    "convert_maze",
+    "output_maze",
+    "get_shortest_path",
+    "ask_next_process"
 ]

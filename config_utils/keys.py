@@ -1,4 +1,6 @@
+from typing import Tuple
 from enum import Enum
+from typing import TypedDict
 
 
 class Keys(Enum):
@@ -11,3 +13,14 @@ class Keys(Enum):
     PERFECT = "PERFECT"
     SEED = "SEED"
     WAIT_SEC = "WAIT_SEC"
+
+
+class ConfigData(TypedDict):
+    WIDTH: int
+    HEIGHT: int
+    ENTRY: Tuple[int, int]
+    EXIT: Tuple[int, int]
+    OUTPUT_FILE: str
+    PERFECT: bool
+    SEED: int
+    WAIT_SEC: float
