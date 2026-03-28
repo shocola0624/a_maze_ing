@@ -4,8 +4,15 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mazegen"
-version = "2026.3.6"
+version = "2026.3.28"
 requires-python = ">= 3.10"
 description = "This is a maze generator"
 readme = "README.md"
 dependencies = []
+
+[project.optional-dependencies]
+dev = [
+	"flake8",
+	"mypy",
+	"billd",
+]
