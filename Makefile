@@ -20,11 +20,11 @@ clean:
 	rm -rf __pycache__ .mypy_cache */__pycache__ build/ dist/ *.egg-info/ venv
 
 lint:
-	venv/bin/flake8 .
-	venv/bin/mypy . --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
+	venv/bin/flake8 a_maze_ing.py maze_utils config_utils
+	venv/bin/mypy a_maze_ing.py maze_utils config_utils --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
 
 lint-strict:
-	venv/bin/flake8 .
-	venv/bin/mypy . --strict
+	venv/bin/flake8 a_maze_ing.py maze_utils config_utils
+	venv/bin/mypy a_maze_ing.py maze_utils config_utils --strict
 
 .PHONY: install run debug build clean lint lint-strict
