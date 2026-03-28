@@ -25,7 +25,7 @@ class MazeGenerator:
 
     Main responsibilities:
         - Initialize the expanded grid with outer borders, entry, and exit.
-        - Optionally place a central "42" pattern when the maze is large enough.
+        - Place a central "42" pattern when the maze is large enough.
         - Grow walls from lattice points to form the maze layout.
         - Find and mark the shortest path from entry to exit.
         - Render the maze in the terminal using ANSI colors.
@@ -55,12 +55,12 @@ class MazeGenerator:
             config_data: Config data obtained from the specific file.
             color_scheme: Optional list of ANSI color strings.
                 If None, defaults are used.
-            show_path: If True, render shortest path; otherwise render it as floor.
+            show_path: If True, render shortest path.
         """
         def clear_screen() -> None:
             """
-            Clear the terminal screen and move the cursor to the top-left corner.
-            Uses ANSI escape sequences to reset the display.
+            Clear the terminal screen and move the cursor to the top-left
+            corner. Uses ANSI escape sequences to reset the display.
             """
             print("\x1b[2J\x1b[H", end="")
         # 0 floor, 1 wall, 2 inside 42, 3 outside 42, 4 entry, 5 exit, 6 path
@@ -192,17 +192,17 @@ class MazeGenerator:
         ) -> Tuple[int, int]:
             """Lay a 2-cell wall segment from `coord` toward `dir`.
 
-            Writes wall tiles (value 1) into the intermediate cell and the cell two
-            steps ahead, if they are currently floor (0). If the destination cell
-            (two steps ahead) is already non-zero, returns None to signal that the
-            wall hit an existing structure.
+            Writes wall tiles (value 1) into the intermediate cell and the cell
+            two steps ahead, if they are currently floor (0). If the
+            destination cell (two steps ahead) is already non-zero,
+            returns None to signal that the wall hit an existing structure.
 
             Args:
                 dir: Direction to extend ("N", "E", "S", "W").
 
             Returns:
-                The new (x, y) coordinate two steps ahead if extension succeeded,
-                otherwise None.
+                The new (x, y) coordinate two steps ahead if extension
+                succeeded, otherwise None.
             """
             x, y = coord
             coord_to_overwrite = {
@@ -255,10 +255,10 @@ class MazeGenerator:
         ) -> List[str]:
             """Filter open directions to those that can be extended safely.
 
-            In normal mode, a direction is extendable only if the cell two steps
-            ahead is also floor (0). In "to_wall" mode, any open adjacent direction
-            is considered extendable. Directions whose two-steps-ahead coordinate
-            is in `taken_coords` are removed.
+            In normal mode, a direction is extendable only if the cell two
+            steps ahead is also floor (0). In "to_wall" mode, any open adjacent
+            direction is considered extendable. Directions whose
+            two-steps-ahead coordinate is in `taken_coords` are removed.
 
             Args:
                 coord: Current (x, y) position on the expanded grid.
@@ -334,11 +334,11 @@ class MazeGenerator:
     ) -> None:
         """Seed wall starters and grow walls to generate the maze layout.
 
-        If `CK.PERFECT` is enabled and the grid is large enough, this first grows
-        walls starting from predefined points around the central "42" pattern.
-        Then it iterates over even-even lattice points as candidate wall seeds:
-        for each chosen seed, it places an initial wall tile and calls
-        `grow_wall_from()` to extend walls from that seed.
+        If `CK.PERFECT` is enabled and the grid is large enough, this first
+        grows walls starting from predefined points around the central
+        "42" pattern. Then it iterates over even-even lattice points as
+        candidate wall seeds: for each chosen seed, it places an initial wall
+        tile and calls `grow_wall_from()` to extend walls from that seed.
 
         Args:
             expanded_maze: Expanded maze grid.
@@ -395,7 +395,9 @@ class MazeGenerator:
             config_data: Config data obtained from the specific file.
         """
 
-        def adjacent_coord(coord: Tuple[int, int]) -> Iterator[Tuple[int, int]]:
+        def adjacent_coord(
+                coord: Tuple[int, int]
+        ) -> Iterator[Tuple[int, int]]:
             """Yield adjacent coordinates that can be moved to from `coord`.
 
             Args:
@@ -409,7 +411,7 @@ class MazeGenerator:
 
             for i_x, i_y in around:
                 try:
-                    if expanded_maze[i_y][i_x] in (0, 5):  # floor (0), exit (5)
+                    if expanded_maze[i_y][i_x] in (0, 5):  # 0:floor, 5:exit
                         yield (i_x, i_y)
                 except IndexError:
                     pass
