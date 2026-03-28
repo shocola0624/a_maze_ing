@@ -53,7 +53,7 @@ def ask_next_process(
     print("Other: Quit")
     try:
         choice = int(input("Choice? (1-4): ").strip())
-    except ValueError:
+    except (Exception, KeyboardInterrupt):
         return
 
     if choice == 1:
