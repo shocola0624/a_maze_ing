@@ -20,3 +20,4 @@ dist/
 # Output / Config files
 *.txt
 !config.txt
+!requirements.txt

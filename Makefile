@@ -11,8 +11,7 @@ $(VENV):
 	python3 -m venv $(VENV)
 	. $(ACTIVATE); \
 	$(PIP) install --upgrade pip; \
-	$(PIP) install .; \
-	$(PIP) install flake8 mypy build
+	$(PIP) install -r requirements.txt
 
 install: $(VENV)
 
