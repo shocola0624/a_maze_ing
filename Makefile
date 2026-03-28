@@ -25,7 +25,7 @@ debug: $(VENV)
 
 clean:
 	-rm -rf venv
-	-find . \( -name "__pycache__" -o -name "build" -o -name "dist" -o -name "*.egg-info" -o -name "*.pyc" -o -name "maze.txt" \) -print -exec rm -rf {} \;
+	-find . \( -name "__pycache__" -o -name ".mypy_cache" -o -name "build" -o -name "dist" -o -name "*.egg-info" -o -name "*.pyc" -o -name "maze.txt" \) -print -exec rm -rf {} \;
 
 lint: $(VENV)
 	. $(ACTIVATE); \
