@@ -1,6 +1,5 @@
-from typing import Tuple
+from typing import Tuple, TypedDict
 from enum import Enum
-from typing import TypedDict
 
 
 class Keys(Enum):

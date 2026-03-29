@@ -1,4 +1,4 @@
-from typing import Tuple, Optional, cast, Any
+from typing import Any, Tuple, Optional, cast
 from config_utils.keys import Keys as CK, ConfigData
 
 
@@ -9,7 +9,7 @@ def validate_config(config_data: Optional[dict[str, str]]) -> ConfigData:
         config_data: Raw config mapping read from the config file.
 
     Returns:
-        An error message string if validation fails, otherwise None.
+        A dictionary containing the config data.
     """
     if config_data is None:
         exit()
