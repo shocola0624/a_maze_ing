@@ -8,9 +8,9 @@ run: $(VENV)
 	. $(ACTIVATE); $(PYTHON) a_maze_ing.py config.txt
 
 $(VENV):
-	python3 -m venv $(VENV)
+	$(PYTHON) -m venv $(VENV)
 	. $(ACTIVATE); \
-	$(PIP) install --upgrade pip; \
+	$(PIP) install --upgrade $(PIP); \
 	$(PIP) install -r requirements.txt
 
 install: $(VENV)
@@ -24,7 +24,7 @@ debug: $(VENV)
 	$(PDB) a_maze_ing.py config.txt
 
 clean:
-	-rm -rf venv
+	-rm -rf $(VENV)
 	-find . \( -name "__pycache__" -o -name ".mypy_cache" -o -name "build" -o -name "dist" -o -name "*.egg-info" -o -name "*.pyc" -o -name "maze.txt" \) -print -exec rm -rf {} \;
 
 lint: $(VENV)
