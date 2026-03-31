@@ -261,7 +261,7 @@ make clean
 ### Step 1: パッケージのビルド
 プロジェクトのルートディレクトリで以下のコマンドを実行し、配布用のパッケージを作成する。
 ```bash
-make buildkv
+make build
 ```
 * 目的:
 `pyproject.toml` の設定に基づき、再利用可能なモジュール群（`maze_utils`, `config_utils`）のみを `.whl`（Wheel）ファイルとして独立したパッケージに梱包する。
