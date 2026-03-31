@@ -53,4 +53,7 @@ def main(config_path: str | None = None) -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except RecursionError as e:
+        print(e)
