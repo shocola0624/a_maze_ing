@@ -252,24 +252,62 @@ make clean
 - **選定理由**: 今回のような各マスの移動コストが同じ迷路において、確実に最短経路を見つけ出すことができるアルゴリズムだからである。
 - **特徴**: 入口から近いマスから順番に、同心円状に探索を広げていく。最初に出口に到達したルートが必然的に最短経路となるため、直感的に実装できる。
 
-## Code Reusability
+## Code Reusability（モジュールの再利用性）
 
-本プロジェクトのメイン処理である「迷路生成・探索ロジック」は、独立したモジュールとして再利用できるように設計した。`make build` で生成されたパッケージ（.whl 等）を `pip install` することで、外部のPythonプロジェクトから以下の手順で簡単にインポートして利用できる。
+本プロジェクトは、`a_maze_ing.py`と、迷路生成の処理（`maze_utils` および `config_utils`）を分離（疎結合）して設計した。これにより、迷路生成アルゴリズムとして安全に再利用することが可能である。
+
+外部プロジェクトで利用する場合は、以下の手順。
+
+### Step 1: パッケージのビルド
+プロジェクトのルートディレクトリで以下のコマンドを実行し、配布用のパッケージを作成する。
+```bash
+make buildkv
+```
+* 目的:
+`pyproject.toml` の設定に基づき、再利用可能なモジュール群（`maze_utils`, `config_utils`）のみを `.whl`（Wheel）ファイルとして独立したパッケージに梱包する。
+
+### Step 2: 外部環境へのインストール
+生成された `.whl` ファイルを、利用したい別の仮想環境にインストールする。
+
+```bash
+python3 -m venv test_venv
+source venv/bin/activate
+pip install /path/to/a_maze_ing/dist/mazegen-2026.3.28-py3-none-any.whl
+```
+* 目的:
+このモジュールをシステムの標準ライブラリと同じように、どこからでも `import` できる状態にする。
+
+### Step 3: 外部からの呼び出し
+インストール完了後、外部のPythonコードから以下のようにインポートして使用する。テキストファイル（`config.txt`）の読み込みに依存せず、辞書型データを使って直接迷路を生成できる。
 
 ```python
-# 使用例
-from maze_utils import MazeGenerator
+from maze_utils import MazeGenerator, get_shortest_path
 
-# 1. インスタンス化、パラメータ指定
-gen = MazeGenerator()
-config = {"WIDTH": 20, "HEIGHT": 15, "SEED": 42, "PERFECT": True}
+def main():
+    # 1. パラメータの指定
+    config_data = {
+        "WIDTH": 10,
+        "HEIGHT": 10,
+        "ENTRY": (0, 0),
+        "EXIT": (9, 9),
+        "PERFECT": True,
+        "WAIT_SEC": 0.0,
+        "SEED": 42
+    }
 
-# 2. 生成、構造へのアクセス
-maze_data = gen.generate_expanded_maze(config)
+    # 2. 迷路の生成と構造データへのアクセス
+    gen = MazeGenerator()
+    expanded_maze = gen.generate_expanded_maze(config_data)
 
-# 3. 最短経路の取得
-from maze_utils import get_shortest_path
-path = get_shortest_path(maze_data, config) # "NNEESW..." 形式でreturn
+    # 3. 最短経路の取得
+    shortest_path = get_shortest_path(expanded_maze, config_data)
+    print(f"Shortest Path: {shortest_path}")
+
+    # ターミナルに描画して確認
+    gen.print_maze(expanded_maze, config_data)
+
+if __name__ == "__main__":
+    main()
 ```
 
 ## Team and Project Management

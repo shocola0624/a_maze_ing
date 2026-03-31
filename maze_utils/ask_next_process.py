@@ -1,6 +1,5 @@
 from typing import List
 from .generate_maze import MazeGenerator
-from a_maze_ing import main
 from config_utils.keys import ConfigData
 
 
@@ -57,6 +56,7 @@ def ask_next_process(
         return
 
     if choice == 1:
+        from a_maze_ing import main
         main(config_path)
     if choice == 2:
         show_path = not show_path
